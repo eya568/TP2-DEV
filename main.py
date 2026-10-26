@@ -1,6 +1,6 @@
-
 import socket
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -37,3 +37,15 @@ def greeting(name: str):
         "hostname": hostname,
         "IP": ip
     }
+
+
+class DivideRequest(BaseModel):
+    a: float
+    b: float
+
+
+@app.post("/divide")
+def divide(payload: DivideRequest):
+    if payload.b == 0:
+        raise HTTPException(status_code=400, detail="Division by zero is not allowed")
+    return {"result": payload.a / payload.b}
