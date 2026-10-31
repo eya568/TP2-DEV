@@ -57,3 +57,7 @@ def divide(payload: DivideRequest):
     if payload.b == 0:
         raise HTTPException(status_code=400, detail="Division by zero is not allowed")
     return {"result": payload.a / payload.b}
+
+@app.delete("/remove/{id}")
+def remove_item(id: int):
+    return {"message": f"Item {id} removed"}
