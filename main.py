@@ -61,3 +61,24 @@ def divide(payload: DivideRequest):
 @app.delete("/remove/{id}")
 def remove_item(id: int):
     return {"message": f"Item {id} removed"}
+
+# ---------- PUT /update/{id} ----------
+
+class UpdateRequest(BaseModel):
+    name: str
+    value: float
+
+
+# "base de données" en mémoire (simulée)
+items_db: dict[int, dict] = {
+    1: {"name": "item1", "value": 10.0},
+    2: {"name": "item2", "value": 20.0},
+}
+
+
+@app.put("/update/{id}")
+def update_item(id: int, payload: UpdateRequest):
+    if id not in items_db:
+        raise HTTPException(status_code=404, detail="Item not found")
+    items_db[id] = {"name": payload.name, "value": payload.value}
+    return {"id": id, "item": items_db[id]}
